@@ -1,0 +1,3 @@
+[submodule "FinalWeather/Alamofire"]
+	path = FinalWeather/Alamofire
+	url = https://github.com/Alamofire/Alamofire.git
