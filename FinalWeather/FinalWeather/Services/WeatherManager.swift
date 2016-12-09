@@ -79,7 +79,7 @@ class WeatherManager: NSObject{
         let sessionConfig = URLSessionConfiguration.default
         let session = URLSession(configuration: sessionConfig)
         
-        let aStrUrl = openWeatherMapURL + method + "&APPID=\(openWeatherMapAPIKey)&units=imperial"
+        let aStrUrl = openWeatherMapURL + method + "&APPID=\(openWeatherMapAPIKey)&units=metric"
 
         let urlEncoded = aStrUrl.addingPercentEncoding(withAllowedCharacters: CharacterSet.urlQueryAllowed)
 
