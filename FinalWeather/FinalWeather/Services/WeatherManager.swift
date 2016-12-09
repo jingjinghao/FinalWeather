@@ -7,7 +7,6 @@
 //
 
 import Foundation
-import Alamofire
 
 extension String {
     func replace(_ string:String, replacement:String) -> String {
@@ -21,7 +20,6 @@ extension String {
         return self.replace(" ", replacement: "+")
     }
 }
-typealias WeatherCompletionHandler = (Weather?, NSError?) -> Void
 
 public enum WeatherResult {
     case Success(JSON)
