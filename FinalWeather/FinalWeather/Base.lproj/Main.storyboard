@@ -1,14 +1,15 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11134" systemVersion="15F34" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11201" systemVersion="15G31" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11106"/>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11161"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
         <!--View Controller-->
         <scene sceneID="tne-QT-ifu">
             <objects>
-                <viewController id="BYZ-38-t0r" customClass="ViewController" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="BYZ-38-t0r" customClass="ViewController" customModule="FinalWeather" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="y3c-jy-aDJ"/>
                         <viewControllerLayoutGuide type="bottom" id="wfy-db-euE"/>
@@ -16,11 +17,118 @@
                     <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Pvr-Py-iFw">
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="40" id="5JT-jV-XYE"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="25"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bSx-vw-F3F">
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="100" id="KYp-TM-wyF"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" weight="medium" pointSize="135"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="" lineBreakMode="tailTruncation" numberOfLines="4" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="xoU-if-oSc">
+                                <frame key="frameInset" minX="20" minY="185" width="140" height="80"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="80" id="BUx-cE-UNY"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" misplaced="YES" text="" textAlignment="right" lineBreakMode="tailTruncation" numberOfLines="4" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="cvD-b1-zg9">
+                                <frame key="frameInset" minX="215" minY="185" width="140" height="80"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="80" id="AFs-ZM-RqK"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="prototypes" style="plain" separatorStyle="none" allowsSelection="NO" rowHeight="123" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="iCg-Dr-ug0">
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <color key="separatorColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <inset key="separatorInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                <prototypes>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="ForecastCell" rowHeight="120" id="iqP-12-Zc5" customClass="ForecastTableViewCell" customModule="FinalWeather" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="28" width="375" height="120"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="iqP-12-Zc5" id="8RV-re-W0z">
+                                            <frame key="frameInset" width="375" height="120"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" misplaced="YES" text="Label" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="WuU-Xb-uNm">
+                                                    <frame key="frameInset" minX="20" minY="20" width="160" height="79"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                                                    <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Label" textAlignment="right" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="yKf-o2-QEs">
+                                                    <frame key="frameInset" minX="195" minY="20" width="160" height="79"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                                                    <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstItem="yKf-o2-QEs" firstAttribute="top" secondItem="8RV-re-W0z" secondAttribute="top" constant="20" id="26R-vx-Yc0"/>
+                                                <constraint firstAttribute="bottom" secondItem="WuU-Xb-uNm" secondAttribute="bottom" constant="20" id="9UT-JK-E6m"/>
+                                                <constraint firstItem="WuU-Xb-uNm" firstAttribute="top" secondItem="8RV-re-W0z" secondAttribute="top" constant="20" id="B2W-ne-QuY"/>
+                                                <constraint firstItem="yKf-o2-QEs" firstAttribute="leading" secondItem="WuU-Xb-uNm" secondAttribute="trailing" constant="15" id="i6J-V2-Je1"/>
+                                                <constraint firstAttribute="bottom" secondItem="yKf-o2-QEs" secondAttribute="bottom" constant="20" id="p3U-cd-8k1"/>
+                                                <constraint firstAttribute="trailing" secondItem="yKf-o2-QEs" secondAttribute="trailing" constant="20" id="qQ3-J7-OTl"/>
+                                                <constraint firstItem="WuU-Xb-uNm" firstAttribute="leading" secondItem="8RV-re-W0z" secondAttribute="leading" constant="20" id="zro-Df-Vhk"/>
+                                            </constraints>
+                                        </tableViewCellContentView>
+                                        <color key="backgroundColor" red="0.98431372549999996" green="0.78823529410000004" blue="0.1843137255" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <connections>
+                                            <outlet property="lblInfoLeft" destination="WuU-Xb-uNm" id="KHM-yC-77n"/>
+                                            <outlet property="lblInfoRight" destination="yKf-o2-QEs" id="UIg-e3-ot3"/>
+                                        </connections>
+                                    </tableViewCell>
+                                </prototypes>
+                                <connections>
+                                    <outlet property="dataSource" destination="BYZ-38-t0r" id="9gj-2g-m3t"/>
+                                </connections>
+                            </tableView>
+                        </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <constraints>
+                            <constraint firstItem="bSx-vw-F3F" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="9KL-wj-K1O"/>
+                            <constraint firstAttribute="trailing" secondItem="iCg-Dr-ug0" secondAttribute="trailing" id="AX7-Za-4pU"/>
+                            <constraint firstItem="cvD-b1-zg9" firstAttribute="top" secondItem="bSx-vw-F3F" secondAttribute="bottom" constant="20" id="DYW-7p-HQa"/>
+                            <constraint firstItem="Pvr-Py-iFw" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" constant="20" id="Jg8-5Z-H0A"/>
+                            <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="iCg-Dr-ug0" secondAttribute="bottom" id="LYD-fF-gMG"/>
+                            <constraint firstItem="cvD-b1-zg9" firstAttribute="leading" secondItem="xoU-if-oSc" secondAttribute="trailing" constant="55" id="NHL-ZB-eOq"/>
+                            <constraint firstItem="iCg-Dr-ug0" firstAttribute="top" secondItem="cvD-b1-zg9" secondAttribute="bottom" constant="5" id="NI1-rP-raU"/>
+                            <constraint firstItem="xoU-if-oSc" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" constant="20" id="STU-Pu-Abw"/>
+                            <constraint firstItem="Pvr-Py-iFw" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" id="Zwg-Hi-Avh"/>
+                            <constraint firstAttribute="trailing" secondItem="cvD-b1-zg9" secondAttribute="trailing" constant="20" id="l0e-Qw-fBQ"/>
+                            <constraint firstItem="xoU-if-oSc" firstAttribute="top" secondItem="bSx-vw-F3F" secondAttribute="bottom" constant="20" id="qQn-Y3-03S"/>
+                            <constraint firstAttribute="trailing" secondItem="Pvr-Py-iFw" secondAttribute="trailing" constant="20" id="tpf-iP-3Pv"/>
+                            <constraint firstItem="bSx-vw-F3F" firstAttribute="top" secondItem="Pvr-Py-iFw" secondAttribute="bottom" constant="5" id="x52-y1-Izj"/>
+                            <constraint firstAttribute="trailing" secondItem="bSx-vw-F3F" secondAttribute="trailing" id="yjP-Rl-9gJ"/>
+                            <constraint firstItem="iCg-Dr-ug0" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="zeZ-p3-Lhu"/>
+                        </constraints>
                     </view>
+                    <connections>
+                        <outlet property="forecastTableView" destination="iCg-Dr-ug0" id="EFW-Ts-46X"/>
+                        <outlet property="lblTemperature" destination="bSx-vw-F3F" id="gaW-g9-xzx"/>
+                        <outlet property="lblWeatherDescriptionLeft" destination="xoU-if-oSc" id="BQ3-XK-ZYg"/>
+                        <outlet property="lblWeatherDescriptionRight" destination="cvD-b1-zg9" id="S8Q-UA-U9a"/>
+                        <outlet property="lblcityName" destination="Pvr-Py-iFw" id="bWz-t9-Q6T"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
+            <point key="canvasLocation" x="407.19999999999999" y="25.637181409295355"/>
         </scene>
     </scenes>
 </document>

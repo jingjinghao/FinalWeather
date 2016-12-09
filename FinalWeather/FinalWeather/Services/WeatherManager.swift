@@ -9,6 +9,20 @@
 import Foundation
 import Alamofire
 
+extension String {
+    func replace(_ string:String, replacement:String) -> String {
+        return self.replacingOccurrences(of: string,
+                                         with: replacement,
+                                         options: NSString.CompareOptions.literal,
+                                         range: nil)
+    }
+    
+    func replaceWhitespace() -> String {
+        return self.replace(" ", replacement: "+")
+    }
+}
+typealias WeatherCompletionHandler = (Weather?, NSError?) -> Void
+
 public enum WeatherResult {
     case Success(JSON)
     case Error(String)
@@ -23,88 +37,138 @@ public enum WeatherResult {
     }
 }
 
-
 class WeatherManager: NSObject{
     
-    private var params = [String : AnyObject]()
-    public init(apiKey: String) {
-        params["APPID"] = apiKey as AnyObject?
-    }
+    fileprivate let openWeatherMapURL       = "http://api.openweathermap.org/data/2.5/"
+    fileprivate let openWeatherMapAPIKey    = "c7a3f5ff26fe45c016e5117cac1d6f77"
     
-    private func apiCall(method: Router, response: (WeatherResult) -> Void) {
-        Alamofire.request(method).responseJSON { response in
-//            guard let js: AnyObject = data.value , data.isSuccess else {
-//                response(WeatherResult.Error(data.error.debugDescription))
-//                return
-//            }
-//            response(WeatherResult.Success(JSON(js)))
-            print("error \(response.result.error)")
-            print("value \(response.result.value)")
-            switch response.result {
-            case .Success(let data):
-                response(WeatherResult.Success(JSON(data.value)))
-//                completion?(error: nil, data: data)
-//                let json = JSON(data)
-//                let keychain = Keychain()
-//                if (keychain["deviceId"] == nil)
-//                {
-//                    if json["uuid"] != nil{
-//                        keychain["deviceId"] = json["uuid"].stringValue
-//                    }
-//                }
-            case .Failure(let error):
-                completion?(error: error, data: nil)
-                print("Request failed with error: \(error)")
+    func getForecasts(_ json: JSON) -> [Forecast] {
+        var forecasts: [Forecast] = []
+        
+        for (index,_) in json["list"].enumerated(){
+            guard  let dateDouble = json["list"][index]["dt"].double,
+                let tempsMin = json["list"][index]["temp"]["min"].double,
+                let tempsMax = json["list"][index]["temp"]["max"].double,
+                let weatherDes = json["list"][index]["weather"][0]["main"].string,
+                let pressure = json["list"][index]["pressure"].double,
+                let humidity = json["list"][index]["humidity"].int,
+                let windSpeed = json["list"][index]["speed"].double,
+                let windDeg =  json["list"][index]["deg"].int else {
+                    break
             }
+            
+            let forecast = Forecast(dateDouble,tempsMin,tempsMax,weatherDes,pressure,humidity,windSpeed,windDeg)
+            forecasts.append(forecast)
         }
-//        Alamofire.request(method).responseJSON { (_, _, data) in
-//            guard let js: AnyObject = data.value where data.isSuccess else {
-//                response(WeatherResult.Error(data.error.debugDescription))
-//                return
-//            }
-//            response(WeatherResult.Success(JSON(js)))
-//        }
+        
+        return forecasts
     }
 
-    enum Router: URLRequestConvertible {
-        static let baseURLString = "http://api.openweathermap.org/data/"
-        static let apiVersion = "2.5"
+    // MARK: Get Current Weather
+    func currentWeatherWithCityName(_ cityName: String, completionHandler: @escaping (WeatherResult) -> ()) {
+        sendRequest("/weather?q=\(cityName.replaceWhitespace())", completionHandler: completionHandler)
+    }
+    
+    // MARK: Get Daily Forecast
+    func dailyForecastWithCityName(_ cityName: String, completionHandler: @escaping (WeatherResult) -> ()) {
+        sendRequest("/forecast/daily?q=\(cityName.replaceWhitespace())", completionHandler: completionHandler)
+    }
+    
+    
+    // MARK: SendRequest
+    fileprivate func sendRequest(_ method: String, completionHandler: @escaping (WeatherResult) -> ()) {
         
-        case Weather([String: AnyObject])
-        case DailyForecast([String: AnyObject])
+        let sessionConfig = URLSessionConfiguration.default
+        let session = URLSession(configuration: sessionConfig)
         
-        var method: Alamofire.Method {
-            return .GET
-        }
+        let aStrUrl = openWeatherMapURL + method + "&APPID=\(openWeatherMapAPIKey)&units=imperial"
+
+        let urlEncoded = aStrUrl.addingPercentEncoding(withAllowedCharacters: CharacterSet.urlQueryAllowed)
+
+        let weatherRequestURL = URL(string: urlEncoded!)
         
-        var path: String {
-            switch self {
-            case .Weather:
-                return "/weather"
-            case .DailyForecast:
-                return "/forecast/daily"
+        let request = URLRequest(url: weatherRequestURL!)
         
+        // The data task get the data.
+        
+        let task = session.dataTask(with: request, completionHandler: { data, response, error in
+            guard let unwrappedData = data else {
+                completionHandler(WeatherResult.Error(error.debugDescription))
+                return
             }
-        }
-        
-        // MARK: URLRequestConvertible
-        var URLRequest: NSMutableURLRequest {
-            let URL = NSURL(string: Router.baseURLString + Router.apiVersion)!
-            let mutableURLRequest = NSMutableURLRequest(URL: URL.URLByAppendingPathComponent(path)!)
-            mutableURLRequest.HTTPMethod = method.rawValue
+            let json = JSON(data: unwrappedData)
+            completionHandler(WeatherResult.Success(json))
             
-            func encode(params: [String: AnyObject]) -> NSMutableURLRequest {
-                return Alamofire.ParameterEncoding.URL.encode(mutableURLRequest, parameters: params).0
+        })
+        
+        task.resume()
+    }
+    
+    // MARK: Load from JSONFILE
+    func loadJson(_ filePath: String ,completionHandler: @escaping (WeatherResult) -> ()){
+        
+        do {
+            let data = try Data(contentsOf: URL(fileURLWithPath: filePath), options: NSData.ReadingOptions.mappedIfSafe)
+            let jsonObj = JSON(data: data)
+            if jsonObj != JSON.null {
+                completionHandler(WeatherResult.Success(jsonObj))
+                
+            } else {
+                print("could not get json from file, make sure that file contains valid json.")
             }
-            
-            switch self {
-            case .Weather(let parameters):
-                return encode(parameters)
-            case .DailyForecast(let parameters):
-                return encode(parameters)
-            }
+        } catch let error as NSError {
+            print(error.localizedDescription)
+            completionHandler(WeatherResult.Error(error.debugDescription))
         }
     }
     
+
+    // MARK: Write JSON to File
+    func writeToJsonFile(_ json:JSON,_ name:NSString)->Void
+    {
+        
+        let documentsDirectoryPathString = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true).first!
+        print("Document Path:+ \(documentsDirectoryPathString)")
+
+        let documentsDirectoryPath = URL(string: documentsDirectoryPathString)!
+        
+        
+        let jsonFilePath = documentsDirectoryPath.appendingPathComponent(name as String)
+        let fileManager = FileManager.default
+        var isDirectory: ObjCBool = false
+        
+        if fileManager.fileExists(atPath: jsonFilePath.absoluteString, isDirectory: &isDirectory) {
+            do {
+                try fileManager.removeItem(atPath: jsonFilePath.absoluteString)
+                print("File removed")
+                
+            }
+            catch let error as NSError {
+                print("Ooops! Something went wrong: \(error)")
+            }
+            
+        }
+        
+        let created = fileManager.createFile(atPath: jsonFilePath.absoluteString, contents: nil, attributes: nil)
+        if created {
+            print("File created ")
+        } else {
+            print("Couldn't create file for some reason")
+        }
+        
+        let str = json.description
+        let jsonData = str.data(using: String.Encoding.utf8)!
+        
+        // Write that JSON to the file created earlier
+        do {
+            let file = try FileHandle(forWritingTo: jsonFilePath)
+            file.write(jsonData)
+            print("JSON data was written to teh file successfully!")
+        } catch let error as NSError {
+            print("Couldn't write to file: \(error.localizedDescription)")
+        }
+        
+    }
+
 
 }
